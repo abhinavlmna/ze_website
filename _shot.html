@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    html, body { margin:0; padding:0; overflow:hidden; background:#FBFAF8; }
+    #wrap { position:absolute; left:0; top:0; }
+    iframe { border:0; display:block; }
+  </style>
+</head>
+<body>
+  <div id="wrap"><iframe id="f" src="/"></iframe></div>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const w = Number(q.get('w') || 1440);
+    const h = Number(q.get('h') || 12000);
+    const y = Number(q.get('y') || 0);
+    const f = document.getElementById('f');
+    f.style.width = w + 'px';
+    f.style.height = h + 'px';
+    document.getElementById('wrap').style.top = (-y) + 'px';
+  </script>
+</body>
+</html>
