@@ -7,6 +7,7 @@ import '../constants/contact_config.dart';
 import 'common/buttons.dart';
 import 'common/reveal.dart';
 import 'common/section.dart';
+import 'common/social_links.dart';
 
 class ContactSection extends StatelessWidget {
   const ContactSection({super.key});
@@ -84,20 +85,35 @@ class _ContactDetails extends StatelessWidget {
             children: [
               _ContactRow(
                 label: 'WhatsApp',
-                value: ContactConfig.phoneDisplay,
+                value: ContactConfig.whatsappDisplay,
                 onTap: () => LinkLauncher.whatsapp(),
                 isFirst: true,
+              ),
+              _ContactRow(
+                label: 'Phone',
+                value: ContactConfig.phoneDisplay,
+                onTap: () => LinkLauncher.phone(),
               ),
               _ContactRow(
                 label: 'Email',
                 value: ContactConfig.email,
                 onTap: () => LinkLauncher.email(),
               ),
-              _ContactRow(
-                label: 'Instagram',
-                value: ContactConfig.instagramHandle,
-                onTap: () => LinkLauncher.instagram(),
+            ],
+          ),
+        ),
+        SizedBox(height: context.isMobile ? 32 : 40),
+        Reveal(
+          delay: const Duration(milliseconds: 240),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'FOLLOW',
+                style: AppText.eyebrow(context, color: AppColors.textMuted),
               ),
+              const SizedBox(height: 16),
+              const SocialLinks(),
             ],
           ),
         ),

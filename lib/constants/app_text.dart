@@ -79,8 +79,8 @@ class AppText {
   /// stay readable at three or four words per line.
   static TextStyle processStep(BuildContext c, {Color? color}) => TextStyle(
         fontFamily: sans,
-        fontSize: fluid(c, min: 10.5, max: 15),
-        fontWeight: FontWeight.w400,
+        fontSize: fluid(c, min: 10.5, max: 15.5),
+        fontWeight: FontWeight.w500,
         height: 1.45,
         letterSpacing: 0.3,
         color: color ?? AppColors.textOnDark,

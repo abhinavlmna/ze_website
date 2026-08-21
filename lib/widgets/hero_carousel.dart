@@ -333,7 +333,22 @@ class _CaptionLine extends StatelessWidget {
           child: Text(
             text.toUpperCase(),
             textAlign: TextAlign.center,
-            style: AppText.slideCaption(context, color: AppColors.textOnDark),
+            style: AppText.slideCaption(
+              context,
+              color: AppColors.textOnDark,
+            ).copyWith(
+              // The caption sits straight on the photograph, and the second
+              // slide runs bright behind it. Emphasis has to come from contrast
+              // — an accent hue at this size and tracking reads as dimmer type,
+              // not as a highlight.
+              shadows: <Shadow>[
+                Shadow(
+                  color: AppColors.slateDeep.withValues(alpha: 0.85),
+                  blurRadius: 16,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
           ),
         ),
       ],

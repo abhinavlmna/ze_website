@@ -58,8 +58,35 @@ void main() {
   });
 
   test('outbound links are built from the central config', () {
-    expect(ContactConfig.whatsappUrl, 'https://wa.me/917025911389');
-    expect(ContactConfig.mailtoUrl, startsWith('mailto:abhinavkk61@gmail.com'));
-    expect(ContactConfig.instagramUrl, startsWith('https://www.instagram.com/'));
+    expect(ContactConfig.whatsappUrl, 'https://wa.me/919567230909');
+    expect(ContactConfig.telUrl, 'tel:+914843141824');
+    expect(ContactConfig.mailtoUrl, startsWith('mailto:zespace7070@gmail.com'));
+    expect(
+      ContactConfig.instagramUrl,
+      startsWith('https://www.instagram.com/ze_space_interior'),
+    );
+    expect(
+      ContactConfig.facebookUrl,
+      'https://www.facebook.com/share/1B48514bYA/?mibextid=wwXIfr',
+    );
+  });
+
+  testWidgets('contact section offers both social links',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1440, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const ZeSpaceApp());
+    await tester.pump(const Duration(seconds: 3));
+
+    expect(
+      find.bySemanticsLabel('Ze Space Interior on Facebook'),
+      findsWidgets,
+    );
+    expect(
+      find.bySemanticsLabel('Ze Space Interior on Instagram'),
+      findsWidgets,
+    );
   });
 }

@@ -91,8 +91,10 @@ void main() {
 
     expect(scaleOf().scale, 1.0);
     expect(slideOf().offset, Offset.zero);
-    // No teal at rest — every badge is a plain outline until hovered.
-    expect(decorationOf().color!.a, 0.0);
+    // A dark plate at rest, never teal — teal is reserved for hover. The plate
+    // has to be opaque enough to hold the icon against bright marble.
+    expect(decorationOf().color, isNot(AppColors.teal));
+    expect(decorationOf().color!.a, greaterThan(0.4));
 
     final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
     await mouse.addPointer(location: Offset.zero);

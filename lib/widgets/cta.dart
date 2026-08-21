@@ -63,7 +63,7 @@ class CtaSection extends StatelessWidget {
                     onPressed: () => LinkLauncher.whatsapp(),
                     semanticLabel:
                         'Message Ze Space Interior on WhatsApp at '
-                        '${ContactConfig.phoneDisplay}',
+                        '${ContactConfig.whatsappDisplay}',
                   ),
                   ActionButton(
                     label: 'Get in Touch',

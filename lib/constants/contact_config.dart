@@ -23,10 +23,10 @@ class ContactConfig {
   // ---- WhatsApp ------------------------------------------------------------
   /// Country code + number, digits only — this is what wa.me expects.
   static const String whatsappCountryCode = '91';
-  static const String whatsappNumber = '7025911389';
+  static const String whatsappNumber = '9567230909';
 
   /// Human-readable form used in the UI.
-  static const String phoneDisplay = '+91 70259 11389';
+  static const String whatsappDisplay = '+91 95672 30909';
 
   static String get whatsappUrl =>
       'https://wa.me/$whatsappCountryCode$whatsappNumber';
@@ -40,12 +40,26 @@ class ContactConfig {
   static const String whatsappDefaultMessage =
       "Hello Ze Space Interior, I'd like to talk about an interior project.";
 
+  // ---- Landline ------------------------------------------------------------
+  /// As dialled locally, and the E.164 form a dialler actually needs.
+  static const String phoneDisplay = '0484 314 1824';
+  static const String phoneDialCode = '+914843141824';
+
+  static String get telUrl => 'tel:$phoneDialCode';
+
   // ---- Instagram -----------------------------------------------------------
-  static const String instagramHandle = '@aa__d_h_i';
-  static const String instagramUrl = 'https://www.instagram.com/aa__d_h_i';
+  static const String instagramHandle = '@ze_space_interior';
+  static const String instagramUrl =
+      'https://www.instagram.com/ze_space_interior?igsi=MTdvNTgzcTUwZTB6cQ%3D%3D'
+      '&utm_source=qr';
+
+  // ---- Facebook ------------------------------------------------------------
+  static const String facebookHandle = 'Ze Space Interior';
+  static const String facebookUrl =
+      'https://www.facebook.com/share/1B48514bYA/?mibextid=wwXIfr';
 
   // ---- Email ---------------------------------------------------------------
-  static const String email = 'abhinavkk61@gmail.com';
+  static const String email = 'zespace7070@gmail.com';
   static const String emailSubject = 'Interior design enquiry';
 
   static String get mailtoUrl =>
@@ -85,8 +99,12 @@ class LinkLauncher {
 
   static Future<void> instagram() => open(ContactConfig.instagramUrl);
 
-  /// Mail links replace the current context rather than opening a blank tab
-  /// that would be left behind after the mail client takes over.
+  static Future<void> facebook() => open(ContactConfig.facebookUrl);
+
+  /// Mail and tel links hand off to another app, so they replace the current
+  /// context rather than opening a blank tab that would be left behind.
   static Future<void> email() =>
       open(ContactConfig.mailtoUrl, newTab: false);
+
+  static Future<void> phone() => open(ContactConfig.telUrl, newTab: false);
 }

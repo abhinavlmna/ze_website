@@ -4,6 +4,7 @@ import '../constants/app_colors.dart';
 import '../constants/app_text.dart';
 import '../constants/breakpoints.dart';
 import '../constants/contact_config.dart';
+import 'common/social_links.dart';
 import 'navbar.dart';
 
 /// Full-screen navigation for phones and tablets. Items rise in one after
@@ -61,20 +62,22 @@ class MobileMenu extends StatelessWidget {
                     ),
                     const SizedBox(height: 18),
                     _MenuContactRow(
-                      label: ContactConfig.phoneDisplay,
+                      label: ContactConfig.whatsappDisplay,
                       caption: 'WhatsApp',
                       onTap: () => LinkLauncher.whatsapp(),
+                    ),
+                    _MenuContactRow(
+                      label: ContactConfig.phoneDisplay,
+                      caption: 'Phone',
+                      onTap: () => LinkLauncher.phone(),
                     ),
                     _MenuContactRow(
                       label: ContactConfig.email,
                       caption: 'Email',
                       onTap: () => LinkLauncher.email(),
                     ),
-                    _MenuContactRow(
-                      label: ContactConfig.instagramHandle,
-                      caption: 'Instagram',
-                      onTap: () => LinkLauncher.instagram(),
-                    ),
+                    const SizedBox(height: 24),
+                    const SocialLinks(),
                     const SizedBox(height: 24),
                     Text(
                       ContactConfig.addressLine,

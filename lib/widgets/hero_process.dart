@@ -71,7 +71,13 @@ class _Connector extends StatelessWidget {
         child: Icon(
           Icons.arrow_right_alt,
           size: size,
-          color: AppColors.textOnDark.withValues(alpha: 0.45),
+          color: AppColors.textOnDark.withValues(alpha: 0.65),
+          shadows: <Shadow>[
+            Shadow(
+              color: AppColors.slateDeep.withValues(alpha: 0.8),
+              blurRadius: 10,
+            ),
+          ],
         ),
       ),
     );
@@ -138,25 +144,33 @@ class _BadgeState extends State<_Badge> {
                     height: widget.diameter,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      // Every badge is a plain outline at rest; teal is what
-                      // hover means. Fading an already-teal colour up from zero
-                      // alpha — rather than lerping out of transparent black —
-                      // keeps the fill from dipping through a muddy tone on the
-                      // way in.
-                      color: AppColors.teal
-                          .withValues(alpha: _hovered ? 1.0 : 0.0),
+                      // A tinted disc rather than a bare outline: the second
+                      // photograph is bright marble on its right-hand side, and
+                      // an unfilled ring simply disappears into it. Teal is
+                      // still reserved for hover.
+                      color: _hovered
+                          ? AppColors.teal
+                          : AppColors.slateDeep.withValues(alpha: 0.55),
                       border: Border.all(
                         color: _hovered
                             ? AppColors.teal
-                            : AppColors.textOnDark.withValues(alpha: 0.42),
-                        width: 1.2,
+                            : AppColors.textOnDark.withValues(alpha: 0.6),
+                        width: 1.4,
                       ),
                       boxShadow: <BoxShadow>[
+                        // Always on — this is what separates the disc from the
+                        // photograph behind it.
+                        BoxShadow(
+                          color: AppColors.slateDeep.withValues(alpha: 0.38),
+                          blurRadius: 18,
+                          offset: const Offset(0, 6),
+                        ),
+                        // And the teal bloom that answers the cursor.
                         BoxShadow(
                           color: AppColors.teal
-                              .withValues(alpha: _hovered ? 0.45 : 0.0),
-                          blurRadius: 28,
-                          spreadRadius: 1,
+                              .withValues(alpha: _hovered ? 0.5 : 0.0),
+                          blurRadius: 30,
+                          spreadRadius: 2,
                         ),
                       ],
                     ),
@@ -175,8 +189,19 @@ class _BadgeState extends State<_Badge> {
                 textAlign: TextAlign.center,
                 style: AppText.processStep(
                   context,
-                  color: AppColors.textOnDark
-                      .withValues(alpha: _hovered ? 1.0 : 0.82),
+                  color: AppColors.textOnDark,
+                ).copyWith(
+                  // Captions sit straight on the photograph with no plate
+                  // behind them, so they carry their own shadow. Without it the
+                  // right-hand two are white type on white marble.
+                  shadows: <Shadow>[
+                    Shadow(
+                      color: AppColors.slateDeep
+                          .withValues(alpha: _hovered ? 0.95 : 0.85),
+                      blurRadius: 14,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Text(
                   widget.compact ? step.shortLabel : step.label,

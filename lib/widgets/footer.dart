@@ -6,6 +6,7 @@ import '../constants/breakpoints.dart';
 import '../constants/contact_config.dart';
 import 'common/brand_logo.dart';
 import 'common/section.dart';
+import 'common/social_links.dart';
 import 'navbar.dart';
 
 class FooterSection extends StatelessWidget {
@@ -179,8 +180,8 @@ class _FooterConnect extends StatelessWidget {
           external: true,
         ),
         _FooterLink(
-          label: 'Instagram',
-          onTap: () => LinkLauncher.instagram(),
+          label: ContactConfig.phoneDisplay,
+          onTap: () => LinkLauncher.phone(),
           external: true,
         ),
         _FooterLink(
@@ -188,6 +189,8 @@ class _FooterConnect extends StatelessWidget {
           onTap: () => LinkLauncher.email(),
           external: true,
         ),
+        const SizedBox(height: 22),
+        const SocialLinks(onDark: true),
       ],
     );
   }
