@@ -64,6 +64,17 @@ class AppText {
         color: color ?? AppColors.teal,
       );
 
+  /// Hero carousel caption. A step up from [eyebrow] so a single line of copy
+  /// still holds its own across a full-bleed photograph.
+  static TextStyle slideCaption(BuildContext c, {Color? color}) => TextStyle(
+        fontFamily: sans,
+        fontSize: fluid(c, min: 13, max: 18),
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+        letterSpacing: 2.6,
+        color: color ?? AppColors.textOnDark,
+      );
+
   static TextStyle body(BuildContext c, {Color? color}) => TextStyle(
         fontFamily: sans,
         fontSize: fluid(c, min: 15, max: 17),

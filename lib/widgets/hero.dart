@@ -1,16 +1,18 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_text.dart';
 import '../constants/breakpoints.dart';
 import '../constants/contact_config.dart';
+import '../data/hero_slides.dart';
 import 'common/buttons.dart';
-import 'common/page_scroll.dart';
-import 'common/photo.dart';
+import 'hero_carousel.dart';
 
-/// Full-bleed opening statement: one photograph, one line of type, two ways in.
+/// Full-bleed opening statement: a swipeable pair of photographs, each carrying
+/// its own promise, over one headline and two ways in.
 class HeroSection extends StatefulWidget {
   const HeroSection({
     super.key,
@@ -32,11 +34,37 @@ class _HeroSectionState extends State<HeroSection>
     duration: const Duration(milliseconds: 2200),
   );
 
+  final PageController _pages = PageController();
+
+  /// The live, fractional page position. Published separately from the
+  /// controller so the photographs, the caption and the indicator can all track
+  /// a swipe as it happens rather than snapping once the page settles.
+  final ValueNotifier<double> _page = ValueNotifier<double>(0);
+
   bool _started = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages.addListener(_syncPage);
+  }
+
+  void _syncPage() {
+    if (!_pages.hasClients || !_pages.position.hasContentDimensions) return;
+    _page.value = _pages.page ?? _page.value;
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    // Decode every slide up front. A PageView only builds the page you can see,
+    // so without this the second photograph starts loading at the instant it is
+    // swiped in — and the swipe lands on an empty plate.
+    for (final slide in kHeroSlides) {
+      precacheImage(AssetImage(slide.image), context);
+    }
+
     if (_started) return;
     _started = true;
     if (context.reduceMotion) {
@@ -48,6 +76,9 @@ class _HeroSectionState extends State<HeroSection>
 
   @override
   void dispose() {
+    _pages.removeListener(_syncPage);
+    _pages.dispose();
+    _page.dispose();
     _entrance.dispose();
     super.dispose();
   }
@@ -89,68 +120,43 @@ class _HeroSectionState extends State<HeroSection>
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Positioned.fill(child: _ParallaxBackdrop(entrance: _entrance)),
+          Positioned.fill(
+            child: HeroCarousel(
+              controller: _pages,
+              page: _page,
+              entrance: _entrance,
+            ),
+          ),
           const Positioned.fill(child: _HeroScrim()),
           _HeroContent(
             rise: _rise,
+            page: _page,
             onExploreWork: widget.onExploreWork,
             onGetInTouch: widget.onGetInTouch,
+          ),
+          // Pinned to the frame rather than sitting in the column: the hero
+          // copy is already taller than a laptop viewport, and the calls to
+          // action must not be pushed any further down.
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: context.isMobile ? 20 : 44,
+            child: _rise(
+              0.5,
+              0.9,
+              Center(
+                child: HeroSlideIndicator(controller: _pages, page: _page),
+              ),
+            ),
           ),
           if (!context.isMobile)
             Positioned(
               right: context.gutter,
               bottom: 44,
-              child: _rise(0.75, 1.0, const _ScrollCue()),
+              // Decorative: never intercept a swipe meant for the carousel.
+              child: IgnorePointer(child: _rise(0.75, 1.0, const _ScrollCue())),
             ),
         ],
-      ),
-    );
-  }
-}
-
-/// The photograph drifts a quarter of the scroll distance and settles out of a
-/// very slow zoom, so the first paint has movement without being showy.
-class _ParallaxBackdrop extends StatelessWidget {
-  const _ParallaxBackdrop({required this.entrance});
-
-  final Animation<double> entrance;
-
-  @override
-  Widget build(BuildContext context) {
-    const image = Photo(
-      'assets/images/hero.jpg',
-      fit: BoxFit.cover,
-      alignment: Alignment(0, 0.25),
-      semanticLabel:
-          'An open-plan contemporary living room with a timber feature wall '
-          'and full-height glazing',
-    );
-
-    final offset = PageScroll.maybeOf(context)?.offset;
-    final reduce = context.reduceMotion;
-
-    return ClipRect(
-      child: AnimatedBuilder(
-        animation: entrance,
-        builder: (context, child) {
-          final zoom = reduce
-              ? 1.0
-              : 1.06 - 0.06 * Curves.easeOutCubic.transform(entrance.value);
-          return Transform.scale(scale: zoom, child: child);
-        },
-        child: offset == null || reduce
-            ? image
-            : ValueListenableBuilder<double>(
-                valueListenable: offset,
-                builder: (context, value, child) {
-                  final shift = (value * 0.22).clamp(0.0, 240.0);
-                  return Transform.translate(
-                    offset: Offset(0, shift),
-                    child: child,
-                  );
-                },
-                child: image,
-              ),
       ),
     );
   }
@@ -205,12 +211,14 @@ class _HeroScrim extends StatelessWidget {
 class _HeroContent extends StatelessWidget {
   const _HeroContent({
     required this.rise,
+    required this.page,
     required this.onExploreWork,
     required this.onGetInTouch,
   });
 
   final Widget Function(double start, double end, Widget child,
       {double distance}) rise;
+  final ValueListenable<double> page;
   final VoidCallback onExploreWork;
   final VoidCallback onGetInTouch;
 
@@ -235,50 +243,30 @@ class _HeroContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                rise(
-                  0.05,
-                  0.35,
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 34,
-                        height: 1,
-                        margin: const EdgeInsets.only(right: 16, top: 2),
-                        color: AppColors.textOnDark,
-                      ),
-                      Flexible(
-                        child: Text(
-                          '100% Customised Designs'.toUpperCase(),
-                          style: AppText.eyebrow(
-                            context,
-                            color: AppColors.textOnDark,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // The one line that belongs to the photograph behind it —
+                // crossfades with the carousel.
+                rise(0.05, 0.35, HeroSlideCaption(page: page)),
                 SizedBox(height: context.isMobile ? 22 : 30),
                 rise(
                   0.12,
                   0.5,
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 900),
-                    child: Text.rich(
-                      const TextSpan(
-                        children: [
-                          TextSpan(text: 'Spaces Designed\nWith Character'),
-                          TextSpan(
-                            text: '.',
-                            style: TextStyle(color: AppColors.coral),
-                          ),
-                        ],
-                      ),
-                      style: AppText.display(
-                        context,
-                        color: AppColors.textOnDark,
+                  IgnorePointer(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 900),
+                      child: Text.rich(
+                        const TextSpan(
+                          children: [
+                            TextSpan(text: 'Spaces Designed\nWith Character'),
+                            TextSpan(
+                              text: '.',
+                              style: TextStyle(color: AppColors.coral),
+                            ),
+                          ],
+                        ),
+                        style: AppText.display(
+                          context,
+                          color: AppColors.textOnDark,
+                        ),
                       ),
                     ),
                   ),
@@ -288,14 +276,16 @@ class _HeroContent extends StatelessWidget {
                 rise(
                   0.24,
                   0.62,
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 520),
-                    child: Text(
-                      'Thoughtfully designed interiors and precisely crafted '
-                      'furniture, created around the way you live and work.',
-                      style: AppText.body(
-                        context,
-                        color: AppColors.textOnDark.withValues(alpha: 0.9),
+                  IgnorePointer(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 520),
+                      child: Text(
+                        'Thoughtfully designed interiors and precisely crafted '
+                        'furniture, created around the way you live and work.',
+                        style: AppText.body(
+                          context,
+                          color: AppColors.textOnDark.withValues(alpha: 0.9),
+                        ),
                       ),
                     ),
                   ),
@@ -347,11 +337,13 @@ class _HeroContent extends StatelessWidget {
                   rise(
                     0.5,
                     0.9,
-                    Text(
-                      ContactConfig.addressLine.toUpperCase(),
-                      style: AppText.eyebrow(
-                        context,
-                        color: AppColors.textOnDark.withValues(alpha: 0.7),
+                    IgnorePointer(
+                      child: Text(
+                        ContactConfig.addressLine.toUpperCase(),
+                        style: AppText.eyebrow(
+                          context,
+                          color: AppColors.textOnDark.withValues(alpha: 0.7),
+                        ),
                       ),
                     ),
                   ),
