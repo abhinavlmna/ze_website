@@ -10,6 +10,7 @@ import '../constants/contact_config.dart';
 import '../data/hero_slides.dart';
 import 'common/buttons.dart';
 import 'hero_carousel.dart';
+import 'hero_process.dart';
 
 /// Full-bleed opening statement: a swipeable pair of photographs, each carrying
 /// its own promise, over one headline and two ways in.
@@ -243,32 +244,17 @@ class _HeroContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                // The one line that belongs to the photograph behind it —
-                // crossfades with the carousel.
+
                 rise(0.05, 0.35, HeroSlideCaption(page: page)),
                 SizedBox(height: context.isMobile ? 22 : 30),
                 rise(
                   0.12,
                   0.5,
-                  IgnorePointer(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 900),
-                      child: Text.rich(
-                        const TextSpan(
-                          children: [
-                            TextSpan(text: 'Spaces Designed\nWith Character'),
-                            TextSpan(
-                              text: '.',
-                              style: TextStyle(color: AppColors.coral),
-                            ),
-                          ],
-                        ),
-                        style: AppText.display(
-                          context,
-                          color: AppColors.textOnDark,
-                        ),
-                      ),
-                    ),
+                  HeroSlideSwap(
+                    page: page,
+                    builder: (context, index) => index == 0
+                        ? const IgnorePointer(child: _Headline())
+                        : const HeroProcess(),
                   ),
                   distance: 34,
                 ),
@@ -351,6 +337,26 @@ class _HeroContent extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Headline extends StatelessWidget {
+  const _Headline();
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 900),
+      child: Text.rich(
+        const TextSpan(
+          children: [
+            TextSpan(text: 'Spaces Designed\nWith Character'),
+            TextSpan(text: '.', style: TextStyle(color: AppColors.coral)),
+          ],
+        ),
+        style: AppText.display(context, color: AppColors.textOnDark),
       ),
     );
   }
