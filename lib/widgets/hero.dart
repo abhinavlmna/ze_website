@@ -233,13 +233,14 @@ class _HeroContent extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                 rise(
                   0.05,
                   0.35,
                   Row(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         width: 34,
@@ -249,8 +250,7 @@ class _HeroContent extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          'Interior Design & Furniture Production in Kochi'
-                              .toUpperCase(),
+                          '100% Customised Designs'.toUpperCase(),
                           style: AppText.eyebrow(
                             context,
                             color: AppColors.textOnDark,
