@@ -264,13 +264,27 @@ class _HeroContent extends StatelessWidget {
                   0.62,
                   IgnorePointer(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 520),
+                      constraints: const BoxConstraints(maxWidth: 580),
                       child: Text(
                         'Thoughtfully designed interiors and precisely crafted '
                         'furniture, created around the way you live and work.',
-                        style: AppText.body(
+                        textAlign: TextAlign.center,
+                        style: AppText.heroLead(
                           context,
-                          color: AppColors.textOnDark.withValues(alpha: 0.9),
+                          // The palette's own light teal. A saturated accent
+                          // would only read as dimmer type at this size; a
+                          // tinted near-white keeps the contrast and still
+                          // belongs to the brand rather than to the photograph.
+                          color: AppColors.tealWash,
+                        ).copyWith(
+                          shadows: <Shadow>[
+                            Shadow(
+                              color: AppColors.slateDeep
+                                  .withValues(alpha: 0.85),
+                              blurRadius: 18,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                       ),
                     ),

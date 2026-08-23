@@ -75,6 +75,19 @@ class AppText {
         color: color ?? AppColors.textOnDark,
       );
 
+  /// The hero's lead paragraph. Deliberately not [body]: that style is tuned
+  /// for dark type on paper, and its 300 weight goes thin and washed out set in
+  /// white over a photograph. A step up in weight and size, with slightly
+  /// tighter leading to stop the larger type running away with the height.
+  static TextStyle heroLead(BuildContext c, {Color? color}) => TextStyle(
+        fontFamily: sans,
+        fontSize: fluid(c, min: 15.5, max: 18.5),
+        fontWeight: FontWeight.w400,
+        height: 1.75,
+        letterSpacing: 0.2,
+        color: color ?? AppColors.textOnDark,
+      );
+
   /// Caption beneath a process badge — small, quiet, and set tight enough to
   /// stay readable at three or four words per line.
   static TextStyle processStep(BuildContext c, {Color? color}) => TextStyle(
