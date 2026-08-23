@@ -15,12 +15,19 @@ class Reveal extends StatefulWidget {
     this.delay = Duration.zero,
     this.distance = 34,
     this.duration = const Duration(milliseconds: 900),
+    this.scale = 1,
   });
 
   final Widget child;
   final Duration delay;
   final double distance;
   final Duration duration;
+
+  /// Optional starting scale, settling to 1. Left at its default the widget is
+  /// a pure fade-and-lift and no scale layer is inserted at all — worth setting
+  /// just under 1 for small tiles, where a lift on its own is too slight to
+  /// read.
+  final double scale;
 
   @override
   State<Reveal> createState() => _RevealState();
@@ -102,12 +109,22 @@ class _RevealState extends State<Reveal> with SingleTickerProviderStateMixin {
       animation: _controller,
       builder: (context, child) {
         final eased = Curves.easeOutCubic.transform(_controller.value);
+
+        Widget moved = Transform.translate(
+          offset: Offset(0, (1 - eased) * widget.distance),
+          child: child,
+        );
+
+        if (widget.scale != 1) {
+          moved = Transform.scale(
+            scale: widget.scale + (1 - widget.scale) * eased,
+            child: moved,
+          );
+        }
+
         return Opacity(
           opacity: Curves.easeOut.transform(_controller.value).clamp(0.0, 1.0),
-          child: Transform.translate(
-            offset: Offset(0, (1 - eased) * widget.distance),
-            child: child,
-          ),
+          child: moved,
         );
       },
       child: widget.child,
