@@ -27,10 +27,10 @@ const String kAllCategoryId = 'all';
 /// portfolio means adding one line here and tagging photographs with its `id`.
 const List<ProjectCategory> kProjectCategories = <ProjectCategory>[
   ProjectCategory(id: 'living', label: 'Living Rooms'),
-  ProjectCategory(id: 'bedrooms', label: 'Bedrooms'),
-  ProjectCategory(id: 'kitchens', label: 'Kitchens'),
   ProjectCategory(id: 'dining', label: 'Dining'),
-  ProjectCategory(id: 'workspaces', label: 'Workspaces'),
+  ProjectCategory(id: 'kitchens', label: 'Kitchens'),
+  ProjectCategory(id: 'bedrooms', label: 'Bedrooms'),
+  ProjectCategory(id: 'tv-units', label: 'TV Units'),
 ];
 
 String categoryLabelFor(String id) {
@@ -69,51 +69,91 @@ class Project {
   String get meta => location == null ? category : '$category  ·  $location';
 }
 
-// NOTE: placeholder set. These are the six stock frames the site shipped with,
-// sorted into the new categories so the section renders today. Replace the
-// entries wholesale once the real photographs land in assets/images/.
+// `location` and `year` are deliberately left unset: they publish a claim about
+// where and when a job was built, and nobody has supplied those details yet.
+// Fill them in per project and the tile and lightbox pick them up on their own.
 const List<Project> kProjects = <Project>[
+  // ---- Living ----
   Project(
-    name: 'Modern Residence',
+    name: 'Ivory Lounge',
     categoryId: 'living',
-    location: 'Kochi',
-    year: '2025',
-    image: 'assets/images/project-01.jpg',
+    image: 'assets/images/living-01.jpg',
   ),
   Project(
-    name: 'Contemporary Living',
+    name: 'The Partition Screen',
     categoryId: 'living',
-    location: 'Kakkanad',
-    year: '2025',
-    image: 'assets/images/project-02.jpg',
+    image: 'assets/images/living-02.jpg',
   ),
+
+  // ---- Dining ----
   Project(
-    name: 'Minimal Workspace',
-    categoryId: 'workspaces',
-    location: 'Kochi',
-    year: '2024',
-    image: 'assets/images/project-03.jpg',
-  ),
-  Project(
-    name: 'Quiet Hours',
-    categoryId: 'bedrooms',
-    location: 'Panampilly Nagar',
-    year: '2024',
-    image: 'assets/images/project-04.jpg',
-  ),
-  Project(
-    name: 'The Open Kitchen',
-    categoryId: 'kitchens',
-    location: 'Kakkanad',
-    year: '2024',
-    image: 'assets/images/project-05.jpg',
-  ),
-  Project(
-    name: 'Stone & Light',
+    name: 'Terracotta Six',
     categoryId: 'dining',
-    location: 'Edappally',
-    year: '2023',
-    image: 'assets/images/project-06.jpg',
+    image: 'assets/images/dining-01.jpg',
+  ),
+  Project(
+    name: 'Emerald & Brass',
+    categoryId: 'dining',
+    image: 'assets/images/dining-02.jpg',
+  ),
+  Project(
+    name: 'Walnut Slat Dining',
+    categoryId: 'dining',
+    image: 'assets/images/dining-03.jpg',
+  ),
+
+  // ---- Kitchens ----
+  Project(
+    name: 'The Marble Island',
+    categoryId: 'kitchens',
+    image: 'assets/images/kitchen-01.jpg',
+  ),
+  Project(
+    name: 'Reeded Glass Kitchen',
+    categoryId: 'kitchens',
+    image: 'assets/images/kitchen-02.jpg',
+  ),
+  Project(
+    name: 'Sage Galley',
+    categoryId: 'kitchens',
+    image: 'assets/images/kitchen-03.jpg',
+  ),
+  Project(
+    name: 'Champagne Gloss',
+    categoryId: 'kitchens',
+    image: 'assets/images/kitchen-04.jpg',
+  ),
+
+  // ---- Bedrooms ----
+  Project(
+    name: 'Fluted Calm',
+    categoryId: 'bedrooms',
+    image: 'assets/images/bedroom-01.jpg',
+  ),
+  Project(
+    name: 'Forest Mural',
+    categoryId: 'bedrooms',
+    image: 'assets/images/bedroom-02.jpg',
+  ),
+  Project(
+    name: 'Marble & Rust',
+    categoryId: 'bedrooms',
+    image: 'assets/images/bedroom-03.jpg',
+  ),
+
+  // ---- TV units ----
+  Project(
+    name: 'Fluted Media Wall',
+    categoryId: 'tv-units',
+    image: 'assets/images/tv-unit-01.jpg',
+  ),
+  Project(
+    name: 'Stone & Slat',
+    categoryId: 'tv-units',
+    // The source frame is a 9:16 screen capture with grey letterbox bands top
+    // and bottom; this crops back to the photograph itself.
+    aspectRatio: 0.83,
+    image: 'assets/images/tv-unit-02.jpg',
   ),
 ];
 

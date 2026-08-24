@@ -347,7 +347,7 @@ class _MasonryGallery extends StatefulWidget {
 
   /// Guard rails on how extreme a single tile may get. A freak panorama or a
   /// very tall portrait would otherwise dictate the whole column's rhythm.
-  static const double minRatio = 0.68;
+  static const double minRatio = 0.62;
   static const double maxRatio = 1.72;
 
   @override
@@ -701,12 +701,7 @@ class _LightboxState extends State<_Lightbox> {
                             padding: EdgeInsets.symmetric(
                               vertical: context.isMobile ? 20 : 28,
                             ),
-                            child: Photo(
-                              project.image,
-                              fit: BoxFit.contain,
-                              semanticLabel:
-                                  '${project.name} — ${project.meta}',
-                            ),
+                            child: _LightboxImage(project: project),
                           ),
                         ),
                       ),
@@ -772,6 +767,31 @@ class _LightboxState extends State<_Lightbox> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Shown `contain`ed, so nothing is cropped — except where a project declares a
+/// deliberate crop, which is honoured here too so the viewer matches the tile.
+class _LightboxImage extends StatelessWidget {
+  const _LightboxImage({required this.project});
+
+  final Project project;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = '${project.name} — ${project.meta}';
+    final crop = project.aspectRatio;
+
+    if (crop == null) {
+      return Photo(project.image, fit: BoxFit.contain, semanticLabel: label);
+    }
+
+    return Center(
+      child: AspectRatio(
+        aspectRatio: crop,
+        child: Photo(project.image, semanticLabel: label),
       ),
     );
   }
