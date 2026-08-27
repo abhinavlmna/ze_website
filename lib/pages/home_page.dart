@@ -168,9 +168,9 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                       const PhilosophySection(),
-                      FurnitureSection(
-                        onEnquire: () => _scrollTo(NavTarget.contact),
-                      ),
+                      // FurnitureSection(
+                      //   onEnquire: () => _scrollTo(NavTarget.contact),
+                      // ),
                       CtaSection(
                         onGetInTouch: () => _scrollTo(NavTarget.contact),
                       ),
