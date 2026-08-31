@@ -133,7 +133,7 @@ const List<Project> kProjects = <Project>[
   Project(
     name: 'Forest Mural',
     categoryId: 'bedrooms',
-    image: 'assets/images/bedroom-02.jpg',
+    image: 'assets/images/bedroom-02.jpeg',
   ),
   Project(
     name: 'Marble & Rust',
@@ -145,7 +145,7 @@ const List<Project> kProjects = <Project>[
   Project(
     name: 'Fluted Media Wall',
     categoryId: 'tv-units',
-    image: 'assets/images/tv-unit-01.jpg',
+    image: 'assets/images/tv-unit-01.jpeg',
   ),
   Project(
     name: 'Stone & Slat',
